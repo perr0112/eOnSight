@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HydrometricStationsService {
-  private baseUrl = 'https://hubeau.eaufrance.fr/api/v1/hydrometrie';
+  private baseUrl = environment.hubeauApi;
 
   constructor(private http: HttpClient) {}
 
@@ -19,6 +20,16 @@ export class HydrometricStationsService {
           format: 'json',
           size: '20',
           en_service: inService.toString(),
+        },
+      });
+    }
+
+    getObservationsForStation(codeStation: string, date_debut_obs: string): Observable<any> {
+      return this.http.get(`${this.baseUrl}/observations_tr?`, {
+        params: {
+          code_station: codeStation,
+          date_debut_obs,
+          format: 'json',
         },
       });
     }
