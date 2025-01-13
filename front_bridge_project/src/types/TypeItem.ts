@@ -5,6 +5,7 @@ type TypeItem = {
   longitude: number;
   dateOuverture?: string;
   commune?: string;
+  isOperational?: boolean;
 };
 
 export default TypeItem;

@@ -1,5 +1,14 @@
 <div id="map"></div>
 
+<div class="toggle-stations">
+  Afficher les stations non-opérationnelles
+
+  <label class="switch">
+    <input type="checkbox" (change)="toggleStations()" [checked]="hideNonOperational" />
+    <span class="slider"></span>
+  </label>
+</div>
+
 <div class="sidebar" *ngIf="selectedItem">
   <div class="sidebar__top">
     <button (click)="closeSidebar()">
@@ -22,7 +31,14 @@
   </div>
 
   <div class="sidebar__body">
-    <!-- <p>{{ selectedItem.properties.name }}</p> -->
+    
+    <div class="body__state" *ngIf="selectedItem.type === 'station'">
+      <span>État de la station</span>
+      <h2 [ngClass]="{ 'operational': selectedItem.isOperational }">
+        {{ selectedItem.isOperational ? 'Opérationnelle' : 'Non-opérationnelle' }}
+      </h2>
+    </div>
+
     <div class="body__name">
       <span>Nom
         {{ selectedItem.type === 'bridge' ? 'du pont' : 'de la station' }}

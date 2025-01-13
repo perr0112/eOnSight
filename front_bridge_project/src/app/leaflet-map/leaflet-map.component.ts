@@ -26,6 +26,8 @@ export class LeafletMapComponent implements OnInit {
   selectedItem: TypeItem | null = null;
   hideNonOperational = false;
 
+  private markers: L.Marker[] = [];
+
   constructor(
     private hydrometricStationsService: HydrometricStationsService,
     private bridgesService: BridgesService,
@@ -68,7 +70,17 @@ export class LeafletMapComponent implements OnInit {
   }
 
   private loadHydrometricStations(bbox: string): void {
-    this.hydrometricStationsService.getAllStations(bbox).subscribe((data) => {
+
+    const inService = this.hideNonOperational ? 0 : 1;
+
+    if (this.markers.length > 0) {
+      this.markers.forEach((marker) => {
+        this.map.removeLayer(marker);
+      });
+      this.markers = [];
+    }
+
+    this.hydrometricStationsService.getAllStations(bbox, inService).subscribe((data) => {
       // console.log('dt', data);
       data['data'].forEach((station: any) => {
         console.log('s', station);
@@ -76,7 +88,8 @@ export class LeafletMapComponent implements OnInit {
 
         const marker = L.marker([latitude, longitude], {
           icon: L.icon({
-            iconUrl: './icons/station-icon.png',
+            iconUrl:
+              station.en_service ? './icons/station-icon.png' : './icons/station-non-operational.png',
             iconSize: [30, 40],
             iconAnchor: [12, 40],
           }),
@@ -91,12 +104,15 @@ export class LeafletMapComponent implements OnInit {
             longitude,
             dateOuverture: station.date_ouverture_station,
             commune: station.libelle_commune,
+            isOperational: station.en_service,
           };
 
           console.log('Selected item:', this.selectedItem);
         });
 
         marker.addTo(this.map);
+
+        this.markers.push(marker);
       });
     });
   }
@@ -152,4 +168,13 @@ export class LeafletMapComponent implements OnInit {
     if (!this.selectedItem || this.selectedItem.type !== 'station') return null;
     return capitalizeWord(this.selectedItem?.commune || '');
   }
+
+  toggleStations(): void {
+    this.selectedItem = null;
+    this.hideNonOperational = !this.hideNonOperational;
+    
+    setTimeout(() => {
+      this.loadHydrometricStations(this.map.getBounds().toBBoxString());
+    }, 200);
+  }  
 }
