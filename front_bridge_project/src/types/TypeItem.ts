@@ -6,6 +6,7 @@ type TypeItem = {
   dateOuverture?: string;
   commune?: string;
   isOperational?: boolean;
+  codeStation?: string;
 };
 
 export default TypeItem;
