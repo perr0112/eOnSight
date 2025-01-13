@@ -10,7 +10,7 @@ export class HydrometricStationsService {
 
   constructor(private http: HttpClient) {}
 
-    getAllStations(bbox: string): Observable<any> {
+    getAllStations(bbox: string, inService: number): Observable<any> {
       return this.http.get(`${this.baseUrl}/referentiel/stations?`, {
         params: {
           // code_region: '06',
@@ -18,6 +18,7 @@ export class HydrometricStationsService {
           bbox,
           format: 'json',
           size: '20',
+          en_service: inService.toString(),
         },
       });
     }
