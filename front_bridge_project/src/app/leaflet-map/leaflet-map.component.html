@@ -4,7 +4,11 @@
   Afficher les stations non-opérationnelles
 
   <label class="switch">
-    <input type="checkbox" (change)="toggleStations()" [checked]="hideNonOperational" />
+    <input
+      type="checkbox"
+      (change)="toggleStations()"
+      [checked]="hideNonOperational"
+    />
     <span class="slider"></span>
   </label>
 </div>
@@ -31,17 +35,19 @@
   </div>
 
   <div class="sidebar__body">
-    
     <div class="body__state" *ngIf="selectedItem.type === 'station'">
       <span>État de la station</span>
-      <h2 [ngClass]="{ 'operational': selectedItem.isOperational }">
-        {{ selectedItem.isOperational ? 'Opérationnelle' : 'Non-opérationnelle' }}
+      <h2 [ngClass]="{ operational: selectedItem.isOperational }">
+        {{
+          selectedItem.isOperational ? "Opérationnelle" : "Non-opérationnelle"
+        }}
       </h2>
     </div>
 
     <div class="body__name">
-      <span>Nom
-        {{ selectedItem.type === 'bridge' ? 'du pont' : 'de la station' }}
+      <span
+        >Nom
+        {{ selectedItem.type === "bridge" ? "du pont" : "de la station" }}
       </span>
       <h2>{{ selectedItem.name }}</h2>
     </div>
@@ -55,7 +61,7 @@
 
     <div class="body__date" *ngIf="selectedItem.type === 'station'">
       <span>Date d'ouverture de la station</span>
-      <h2>{{ selectedItem?.dateOuverture | date: 'dd/MM/yyyy' }}</h2>
+      <h2>{{ selectedItem?.dateOuverture | date : "dd/MM/yyyy" }}</h2>
     </div>
 
     <div class="body__coords">
@@ -68,12 +74,24 @@
 
     <div class="body__link">
       <a
-        [href]="'https://www.google.com/maps?q=' + selectedItem.latitude + ',' + selectedItem.longitude"
+        [href]="
+          'https://www.google.com/maps?q=' +
+          selectedItem.latitude +
+          ',' +
+          selectedItem.longitude
+        "
         target="_blank"
         rel="noopener noreferrer"
       >
         Voir sur Google Maps
       </a>
+    </div>
+
+    <div class="body__graph" *ngIf="selectedItem.type === 'station'">
+      <span>Observations hydrométriques</span>
+      <app-hydrometric-graph
+        [selectedItem]="selectedItem"
+      ></app-hydrometric-graph>
     </div>
   </div>
 </div>

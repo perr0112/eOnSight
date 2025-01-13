@@ -11,10 +11,11 @@ import { HydrometricStationsService } from '../../services/HydrometricService';
 import { CommonModule, DatePipe } from '@angular/common';
 import TypeItem from '../../types/TypeItem';
 import { capitalizeWord } from '../../utils/string';
+import { HydrometricGraphComponent } from '../hydrometric-graph/hydrometric-graph.component';
 
 @Component({
   selector: 'app-leaflet-map',
-  imports: [CommonModule],
+  imports: [CommonModule, HydrometricGraphComponent],
   templateUrl: './leaflet-map.component.html',
   styleUrl: './leaflet-map.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -105,6 +106,7 @@ export class LeafletMapComponent implements OnInit {
             dateOuverture: station.date_ouverture_station,
             commune: station.libelle_commune,
             isOperational: station.en_service,
+            codeStation: station.code_station,
           };
 
           console.log('Selected item:', this.selectedItem);
