@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { HydrometricStationsService } from '../../services/HydrometricService';
 import { Chart, registerables } from 'chart.js';
 import { formatDate } from '../../utils/date';
@@ -15,24 +22,16 @@ export class HydrometricGraphComponent implements OnChanges {
     Chart.register(...registerables);
   }
 
-  // @Input() selectedItem: TypeItem | null = null;
   @Input() selectedItem: any;
   chart: any;
   isModalOpen = false;
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['selectedItem']) {
-  //     console.log('selectedItem - graph ====', this.selectedItem);
-
-  //     if (this.selectedItem) {
-  //       this.loadGraph();
-  //     }
-  //   }
-  // }
-
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedItem'] && changes['selectedItem'].currentValue !== changes['selectedItem'].previousValue) {
-      console.log('------- station sélectionnée : ', this.selectedItem);
+    if (
+      changes['selectedItem'] &&
+      changes['selectedItem'].currentValue !==
+        changes['selectedItem'].previousValue
+    ) {
       if (this.selectedItem) {
         this.loadGraph();
       }
@@ -49,20 +48,20 @@ export class HydrometricGraphComponent implements OnChanges {
   }
 
   loadGraph(): void {
-    console.log('loadGraph');
     const startDate = new Date();
 
     const date_debut_obs = startDate.toISOString().split('T')[0];
 
-    this.hydrometricStationsService.getObservationsForStation(this.selectedItem.codeStation, date_debut_obs).subscribe(
-      (response) => {
-        console.log('data', response);
-        this.createGraph(response.data);
-      },
-      (error) => {
-        console.error('error', error);
-      }
-    );
+    this.hydrometricStationsService
+      .getObservationsForStation(this.selectedItem.codeStation, date_debut_obs)
+      .subscribe(
+        (response) => {
+          this.createGraph(response.data);
+        },
+        (error) => {
+          console.error('error', error);
+        }
+      );
   }
 
   @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef;
@@ -75,12 +74,12 @@ export class HydrometricGraphComponent implements OnChanges {
 
     const res = data.slice(0, 100);
 
-    const labels = res.map((obs: any) => obs.date_obs);
+    const labels = res.map((obs: any) => formatDate(obs.date_obs));
     const values = res.map((obs: any) => obs.resultat_obs);
-  
-    console.log(labels, values);
 
-    const ctx = document.getElementById('hydrometricChart') as HTMLCanvasElement;
+    const ctx = document.getElementById(
+      'hydrometricChart'
+    ) as HTMLCanvasElement;
 
     this.chart = new Chart(ctx, {
       type: 'line',

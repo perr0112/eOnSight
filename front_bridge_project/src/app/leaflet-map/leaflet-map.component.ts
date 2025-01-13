@@ -38,11 +38,6 @@ export class LeafletMapComponent implements OnInit {
   ngOnInit(): void {
     this.initMap();
     this.loadBridges();
-
-    this.map.whenReady(() => {
-      // northEast, southWest => {lat, lng}
-      console.log('Map bounds:', this.map.getBounds());
-    });
   }
 
   private initMap(): void {
@@ -57,10 +52,8 @@ export class LeafletMapComponent implements OnInit {
 
     this.map.on('moveend', () => {
       const bounds = this.map.getBounds();
-      // const bbox = `${bounds.getWest()};${bounds.getSouth()};${bounds.getEast()};${bounds.getNorth()}`;
       const bbox = `${bounds.getWest()},${bounds.getSouth()},${bounds.getEast()},${bounds.getNorth()}`;
 
-      console.log('bbox', bbox);
       this.loadHydrometricStations(bbox);
     });
 
@@ -71,7 +64,6 @@ export class LeafletMapComponent implements OnInit {
   }
 
   private loadHydrometricStations(bbox: string): void {
-
     const inService = this.hideNonOperational ? 0 : 1;
 
     if (this.markers.length > 0) {
@@ -81,50 +73,47 @@ export class LeafletMapComponent implements OnInit {
       this.markers = [];
     }
 
-    this.hydrometricStationsService.getAllStations(bbox, inService).subscribe((data) => {
-      // console.log('dt', data);
-      data['data'].forEach((station: any) => {
-        console.log('s', station);
-        const [longitude, latitude] = station.geometry.coordinates;
+    this.hydrometricStationsService
+      .getAllStations(bbox, inService)
+      .subscribe((data) => {
+        data['data'].forEach((station: any) => {
+          const [longitude, latitude] = station.geometry.coordinates;
 
-        const marker = L.marker([latitude, longitude], {
-          icon: L.icon({
-            iconUrl:
-              station.en_service ? './icons/station-icon.png' : './icons/station-non-operational.png',
-            iconSize: [30, 40],
-            iconAnchor: [12, 40],
-          }),
+          const marker = L.marker([latitude, longitude], {
+            icon: L.icon({
+              iconUrl: station.en_service
+                ? './icons/station-icon.png'
+                : './icons/station-non-operational.png',
+              iconSize: [30, 40],
+              iconAnchor: [12, 40],
+            }),
+          });
+
+          marker.on('click', () => {
+            this.selectedItem = {
+              name: station.libelle_site,
+              type: 'station',
+              latitude,
+              longitude,
+              dateOuverture: station.date_ouverture_station,
+              commune: station.libelle_commune,
+              isOperational: station.en_service,
+              codeStation: station.code_station,
+            };
+
+          });
+
+          marker.addTo(this.map);
+
+          this.markers.push(marker);
         });
-
-        marker.on('click', () => {
-          console.log('Station clicked:', station);
-          this.selectedItem = {
-            name: station.libelle_site,
-            type: 'station',
-            latitude,
-            longitude,
-            dateOuverture: station.date_ouverture_station,
-            commune: station.libelle_commune,
-            isOperational: station.en_service,
-            codeStation: station.code_station,
-          };
-
-          console.log('Selected item:', this.selectedItem);
-        });
-
-        marker.addTo(this.map);
-
-        this.markers.push(marker);
       });
-    });
   }
 
   private loadBridges(): void {
     this.bridgesService.getBridges().subscribe((data) => {
-      console.log(data);
 
       data.features.forEach((bridge: any) => {
-        console.log('bridge', bridge);
 
         const geometry = bridge.geometry;
         const wkt = geometry.split(';')[1];
@@ -133,7 +122,6 @@ export class LeafletMapComponent implements OnInit {
 
         if (parsedCoord && parsedCoord.type === 'Point') {
           const coordinates = parsedCoord.coordinates;
-          console.log('Coordinates:', coordinates);
 
           const marker = L.marker([coordinates[1], coordinates[0]], {
             icon: L.icon({
@@ -151,7 +139,6 @@ export class LeafletMapComponent implements OnInit {
               longitude: coordinates[0],
             };
 
-            console.log('Selected item:', this.selectedItem);
           });
 
           marker.addTo(this.map);
@@ -174,9 +161,9 @@ export class LeafletMapComponent implements OnInit {
   toggleStations(): void {
     this.selectedItem = null;
     this.hideNonOperational = !this.hideNonOperational;
-    
+
     setTimeout(() => {
       this.loadHydrometricStations(this.map.getBounds().toBBoxString());
     }, 200);
-  }  
+  }
 }
