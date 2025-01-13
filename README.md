@@ -1,13 +1,44 @@
-# Front End UX Assessment Test - Candidate
+# Hydrometica
 
-This repo contains a *Front End UX intern* assessment test proposed by [Erwan CHEVRIER](https://gitlab.com/ChevrierDev).
+Application for visualizing hydrometric stations and bridges in the Alpes-Maritimes region (06).
 
-## Content
+## Features 🌟
 
-| Files                                                      | Type | Purpose                                                       |
-|------------------------------------------------------------|------|---------------------------------------------------------------|
-| [INSTRUCTION.md](./INSTRUCTION.md)                         | md   | The instructions for the test                                 |
-| [SETUP_DATABASE.md](./SETUP_DATABASE.md)                   | md   | The instructions to setup the database                        |
-| [import_csv_to_db.py](./import_csv_to_db.py)               | py   | The script to import the data into the database               |
-| [verify_import_csv_to_db.py](./verify_import_csv_to_db.py) | py   | The script to verify the import of the data into the database |
-| [sample_bridges.csv](./sample_bridges.csv)                 | csv  | The data that should be imported into the database            |
+- [X] **Interactive Map**: Visualization of hydrometric stations and bridges
+- [X] **Dynamic Data**: Display of water levels for a station
+- [X] **Dynamic Sidebar**: Detailed information about a bridge or station
+- [X] **Charts**: Representation of hydrometric data on a chart
+
+## Tools and technologies used 🛠️
+
+### Front-end
+- **Framework**: Angular
+- **Libraries**:
+    - **Leaflet** (interactive map)
+    - **Chart.js** (hydrometric charts)
+- **Styles**: SCSS for advanced interface customization
+
+### Back-end
+- **Framework**: Django
+- **Database**: PostgreSQL
+- **REST API**: Django REST Framework (DRF)
+
+## 📂 Project Structure
+
+### Frontend (Angular)
+The frontend is located in the ```front_bridge_project/``` folder. It handles the map display, charts and user interaction.
+
+🔗 [Check the Frontend README](./front_bridge_project/README.md)
+
+### Backend (Django)
+The backend is located in the ```back_bridge_project/``` folder. It provides hydrometric station and bridge data via a REST API.
+
+🔗 [Check the Backend README](./back_bridge_project/README.md)
+
+## Prerequisites
+- **Node.js**
+- **Python**
+
+## Installation 🚀
+
+See the installation instructions in the [front-end README](./front_bridge_project/README.md) and the [back-end README](./back_bridge_project/README.md).
