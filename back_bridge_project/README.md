@@ -23,8 +23,7 @@ source myenv/bin/activate
 
 3. Install the requirements
 ```bash
-pip install djangorestframework
-pip install psycopg2
+pip install -r requirements.txt
 ```
 
 4. Start the server
